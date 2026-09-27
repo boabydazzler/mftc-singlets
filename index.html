@@ -155,34 +155,64 @@ input:focus{border-color:var(--bright)}
   margin-top:17px;
 }
 .size-heading label{margin:0}
-.size-guide{margin:8px 0 14px}
-.size-guide summary{
-  display:inline-block;
+.guide-btn{
+  margin:8px 0 14px;
   border:1px solid var(--bright);
-  background:transparent;
+  background:var(--deep);
   color:#fff;
   border-radius:9px;
-  padding:9px 12px;
-  font-size:11px;
+  padding:10px 14px;
+  font-size:12px;
   font-weight:800;
   letter-spacing:.6px;
   cursor:pointer;
-  list-style:none;
 }
-.size-guide summary::-webkit-details-marker{display:none}
-.size-guide[open] summary{background:var(--deep)}
-.guide-panel{
-  margin-top:12px;
-  padding:12px;
+.guide-btn:hover{background:var(--bright)}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:rgba(0,0,0,.78);
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.modal.open{display:flex}
+.modal-card{
+  position:relative;
+  width:min(820px,92vw);
   background:#fff;
-  border-radius:12px;
-  overflow-x:auto;
+  color:#000;
+  border-radius:16px;
+  padding:24px;
+  box-shadow:0 24px 80px rgba(0,0,0,.6);
 }
-.guide-panel img{
+.modal-card h2{
+  margin:0 45px 16px 0;
+  font-size:24px;
+}
+.modal-card img{
   display:block;
   width:100%;
-  min-width:620px;
   height:auto;
+}
+.modal-close{
+  position:absolute;
+  right:13px;
+  top:8px;
+  border:0;
+  background:transparent;
+  color:#000;
+  font-size:34px;
+  line-height:1;
+  cursor:pointer;
+}
+@media(max-width:650px){
+  .modal{padding:10px}
+  .modal-card{width:98vw;padding:14px}
+  .modal-card h2{font-size:19px;margin-bottom:10px}
 }
 @media(max-width:760px){
   .wrap{padding:0}
@@ -212,12 +242,7 @@ input:focus{border-color:var(--bright)}
         <input id="name" name="name" type="text" required autocomplete="name">
 
         <div class="size-heading"><label>Singlet size</label></div>
-        <details class="size-guide">
-          <summary>VIEW SIZE GUIDE</summary>
-          <div class="guide-panel">
-            <img src="sizing.png" alt="Singlet sizing chart showing chest and length measurements">
-          </div>
-        </details>
+        <button type="button" class="guide-btn" id="openGuide">VIEW SIZE GUIDE</button>
         <div class="sizes sizes-all">
           <label class="size"><input type="radio" name="size" value="XXS" required><span>XXS</span></label>
           <label class="size"><input type="radio" name="size" value="XS"><span>XS</span></label>
@@ -287,7 +312,39 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
+
+const guideButton = document.getElementById("openGuide");
+const sizeModal = document.getElementById("sizeModal");
+const closeGuideButton = document.getElementById("closeGuide");
+
+guideButton.addEventListener("click", function () {
+  sizeModal.classList.add("open");
+  sizeModal.setAttribute("aria-hidden", "false");
+});
+
+function closeSizeGuide() {
+  sizeModal.classList.remove("open");
+  sizeModal.setAttribute("aria-hidden", "true");
+}
+
+closeGuideButton.addEventListener("click", closeSizeGuide);
+sizeModal.addEventListener("click", function (event) {
+  if (event.target === sizeModal) closeSizeGuide();
+});
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape" && sizeModal.classList.contains("open")) closeSizeGuide();
+});
+
 </script>
+
+
+<div class="modal" id="sizeModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="sizeGuideTitle">
+    <button type="button" class="modal-close" id="closeGuide" aria-label="Close size guide">×</button>
+    <h2 id="sizeGuideTitle">Singlet Size Guide</h2>
+    <img src="sizing.png" alt="Singlet sizing chart showing chest and length measurements">
+  </div>
+</div>
 
 </body>
 </html>
