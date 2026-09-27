@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MFTC New Club Singlet</title>
+<style>
+:root{
+  --black:#000000;
+  --charcoal:#000000;
+  --deep:#114F02;
+  --bright:#1A9918;
+  --white:#fff;
+  --muted:#ffffff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(145deg,#000000,#114F02);
+  color:var(--white);
+  min-height:100vh;
+}
+.wrap{
+  max-width:1050px;
+  margin:0 auto;
+  padding:34px 20px;
+}
+.card{
+  display:grid;
+  grid-template-columns:minmax(280px,.9fr) minmax(340px,1.1fr);
+  background:#000000;
+  border:1px solid #114F02;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 22px 60px rgba(0,0,0,.35);
+}
+.product{
+  background:#f5f6f4;
+  min-height:650px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px;
+}
+.product img{
+  display:block;
+  width:100%;
+  max-width:430px;
+  max-height:600px;
+  object-fit:contain;
+}
+.form{
+  padding:44px;
+}
+.eyebrow{
+  color:var(--bright);
+  font-size:12px;
+  letter-spacing:2.2px;
+  font-weight:800;
+}
+h1{
+  margin:8px 0 8px;
+  font-size:36px;
+  line-height:1.05;
+}
+.intro{color:#ffffff;margin:0 0 26px}
+.price{
+  display:inline-block;
+  background:#114F02;
+  border:1px solid #1A9918;
+  border-radius:999px;
+  padding:8px 13px;
+  margin-bottom:28px;
+  font-weight:700;
+}
+label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin:17px 0 7px;
+}
+input[type=text],input[type=email]{
+  width:100%;
+  padding:13px 14px;
+  border-radius:10px;
+  border:1px solid #114F02;
+  background:#000000;
+  color:#fff;
+  font-size:16px;
+  outline:none;
+}
+input:focus{border-color:var(--bright)}
+.sizes{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.size input{display:none}
+.size span{
+  display:block;
+  text-align:center;
+  padding:12px 8px;
+  border:1px solid #114F02;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:800;
+}
+.size input:checked + span{
+  background:var(--bright);
+  color:#ffffff;
+  border-color:var(--bright);
+}
+.qty{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.qty button{
+  width:42px;height:42px;border-radius:10px;border:1px solid #114F02;
+  background:#114F02;color:#fff;font-size:23px;cursor:pointer;
+}
+#quantity{
+  width:62px;text-align:center;padding:10px;background:#000000;color:#fff;
+  border:1px solid #114F02;border-radius:10px;font-size:17px;
+}
+.summary{
+  margin-top:24px;
+  padding:16px;
+  border-radius:12px;
+  background:#000000;
+  border-left:4px solid var(--bright);
+  color:#ffffff;
+}
+.submit{
+  margin-top:18px;
+  width:100%;
+  border:0;
+  border-radius:12px;
+  padding:15px;
+  background:var(--bright);
+  color:#ffffff;
+  font-weight:900;
+  font-size:15px;
+  letter-spacing:.8px;
+  cursor:pointer;
+}
+.submit:disabled{opacity:.55;cursor:not-allowed}
+.status{min-height:22px;margin-top:13px;font-size:14px}
+.success{color:#8ce95b}.error{color:#ff8585}
+.small{font-size:12px;color:var(--muted);margin-top:18px}
+@media(max-width:760px){
+  .wrap{padding:0}
+  .card{grid-template-columns:1fr;border-radius:0;border:0}
+  .product{min-height:360px;padding:18px}
+  .product img{max-height:430px}
+  .form{padding:30px 22px 40px}
+  h1{font-size:30px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main class="card">
+    <section class="product">
+      <img src="mftc-singlet.png" alt="Mulligans Flat Track Club singlet">
+    </section>
+    <section class="form">
+      <div class="eyebrow">MULLIGANS FLAT TRACK CLUB</div>
+      <h1>New MFTC Singlet</h1>
+      <p class="intro">We're getting numbers together for our new club singlet. If you'd like one, add your details and select your size below.</p>
+
+      <form id="orderForm">
+        <label for="name">Your name</label>
+        <input id="name" name="name" type="text" required autocomplete="name">
+
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" required autocomplete="email">
+
+        <label>Singlet size</label>
+        <div class="sizes">
+          <label class="size"><input type="radio" name="size" value="Small" required><span>SMALL</span></label>
+          <label class="size"><input type="radio" name="size" value="Medium"><span>MEDIUM</span></label>
+          <label class="size"><input type="radio" name="size" value="Large"><span>LARGE</span></label>
+        </div>
+
+        <button class="submit" id="submitBtn" type="submit">COUNT ME IN</button>
+        <div class="status" id="status" aria-live="polite"></div>
+      </form>
+      <div class="small">This isn't an order or payment. We're simply collecting numbers and sizes before placing an order with the supplier.</div>
+    </section>
+  </main>
+</div>
+
+<script>
+// Paste your deployed Google Apps Script Web App URL between the quotes:
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzp7VpjHNuA-RRJbdEjkLePEuM36rlmWrLLDv7yjIQB9Gg19uP9SI-djkm9sV7wwJXd/exec";
+
+const form = document.getElementById("orderForm");
+const statusEl = document.getElementById("status");
+const submitBtn = document.getElementById("submitBtn");
+
+function selectedSize(){
+  return document.querySelector('input[name="size"]:checked')?.value || "";
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (SCRIPT_URL.includes("PASTE_YOUR")) {
+    statusEl.className = "status error";
+    statusEl.textContent = "The Google Sheet connection has not been added yet.";
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "SENDING…";
+  statusEl.textContent = "";
+
+  const payload = {
+    name: document.getElementById("name").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    size: selectedSize()
+  };
+
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: "POST",
+      headers: {"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+    if (!result.ok) throw new Error(result.error || "Submission failed");
+
+    statusEl.className = "status success";
+    statusEl.textContent = "Thanks! We've added your size to the MFTC numbers.";
+    form.reset();
+  } catch (err) {
+    statusEl.className = "status error";
+    statusEl.textContent = "Your details couldn't be submitted. Please try again.";
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "COUNT ME IN";
+  }
+});
+</script>
+</body>
+</html>
