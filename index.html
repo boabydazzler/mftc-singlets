@@ -145,6 +145,61 @@ input:focus{border-color:var(--bright)}
 .status{min-height:22px;margin-top:13px;font-size:14px}
 .success{color:#8ce95b}.error{color:#ff8585}
 .small{font-size:12px;color:var(--muted);margin-top:18px}
+
+.size-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:17px;
+}
+.size-heading label{margin:0}
+.guide-btn{
+  border:1px solid var(--bright);
+  background:transparent;
+  color:#fff;
+  border-radius:9px;
+  padding:8px 10px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.6px;
+  cursor:pointer;
+}
+.guide-btn:hover{background:var(--deep)}
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(0,0,0,.82);
+  padding:20px;
+  align-items:center;
+  justify-content:center;
+}
+.modal.open{display:flex}
+.modal-card{
+  position:relative;
+  width:min(960px,100%);
+  background:#fff;
+  color:#000;
+  border-radius:18px;
+  padding:28px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+}
+.modal-card h2{margin:0 45px 5px 0}
+.modal-card p{margin:0 45px 20px 0;color:#444}
+.modal-card img{display:block;width:100%;height:auto;border-radius:8px}
+.modal-close{
+  position:absolute;
+  right:16px;
+  top:12px;
+  border:0;
+  background:transparent;
+  color:#000;
+  font-size:34px;
+  cursor:pointer;
+}
+
 @media(max-width:760px){
   .wrap{padding:0}
   .card{grid-template-columns:1fr;border-radius:0;border:0}
@@ -165,6 +220,7 @@ input:focus{border-color:var(--bright)}
       <div class="eyebrow">MULLIGANS FLAT TRACK CLUB</div>
       <h1>New MFTC Singlet</h1>
       <p class="intro">We're getting numbers together for our new club singlet. If you'd like one, add your details and select your size below.</p>
+      <div class="price">$80 per singlet</div>
 
       <form id="orderForm">
         <label for="name">Your name</label>
@@ -173,7 +229,7 @@ input:focus{border-color:var(--bright)}
         <label for="email">Email address</label>
         <input id="email" name="email" type="email" required autocomplete="email">
 
-        <label>Singlet size</label>
+        <div class="size-heading"><label>Singlet size</label><button type="button" class="guide-btn" id="openGuide">VIEW SIZE GUIDE</button></div>
         <div class="sizes">
           <label class="size"><input type="radio" name="size" value="Small" required><span>SMALL</span></label>
           <label class="size"><input type="radio" name="size" value="Medium"><span>MEDIUM</span></label>
@@ -239,6 +295,34 @@ form.addEventListener("submit", async (e) => {
     submitBtn.textContent = "COUNT ME IN";
   }
 });
+
+const sizeModal = document.getElementById("sizeModal");
+document.getElementById("openGuide").addEventListener("click", () => {
+  sizeModal.classList.add("open");
+  sizeModal.setAttribute("aria-hidden","false");
+});
+function closeSizeGuide(){
+  sizeModal.classList.remove("open");
+  sizeModal.setAttribute("aria-hidden","true");
+}
+document.getElementById("closeGuide").addEventListener("click", closeSizeGuide);
+sizeModal.addEventListener("click", (e) => {
+  if (e.target === sizeModal) closeSizeGuide();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeSizeGuide();
+});
+
 </script>
+
+<div class="modal" id="sizeModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="sizeGuideTitle">
+    <button type="button" class="modal-close" id="closeGuide" aria-label="Close size guide">×</button>
+    <h2 id="sizeGuideTitle">Singlet Size Guide</h2>
+    <p>Use the supplier measurements below to help choose your size.</p>
+    <img src="sizing.png" alt="Singlet sizing chart showing chest and length measurements">
+  </div>
+</div>
+
 </body>
 </html>
