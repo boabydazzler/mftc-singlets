@@ -249,6 +249,7 @@ form.addEventListener("submit", async (e) => {
 
   const payload = {
     name: document.getElementById("name").value.trim(),
+    cut: document.querySelector('input[name="cut"]:checked')?.value || "",
     size: selectedSize()
   };
 
