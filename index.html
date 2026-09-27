@@ -169,58 +169,6 @@ input:focus{border-color:var(--bright)}
   cursor:pointer;
 }
 .guide-btn:hover{background:var(--bright)}
-.modal-toggle{
-  position:absolute;
-  opacity:0;
-  pointer-events:none;
-}
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-.modal-toggle:checked + .modal{display:flex}
-.modal-card{
-  position:relative;
-  width:min(820px,94vw);
-  z-index:1;
-}
-.modal-backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.80);
-  cursor:pointer;
-}
-.modal-content{
-  position:relative;
-  z-index:2;
-  background:#fff;
-  color:#000;
-  border-radius:16px;
-  padding:24px;
-  box-shadow:0 24px 80px rgba(0,0,0,.6);
-}
-.modal-content h2{margin:0 45px 16px 0;font-size:24px}
-.modal-content img{display:block;width:100%;height:auto}
-.modal-close{
-  position:absolute;
-  right:14px;
-  top:8px;
-  color:#000;
-  font-size:34px;
-  line-height:1;
-  cursor:pointer;
-}
-@media(max-width:650px){
-  .modal{padding:8px}
-  .modal-card{width:98vw}
-  .modal-content{padding:12px}
-  .modal-content h2{font-size:18px;margin-bottom:10px}
-}
 @media(max-width:760px){
   .wrap{padding:0}
   .card{grid-template-columns:1fr;border-radius:0;border:0}
@@ -248,8 +196,14 @@ input:focus{border-color:var(--bright)}
         <label for="name">Your name</label>
         <input id="name" name="name" type="text" required autocomplete="name">
 
-        <div class="size-heading"><label>Singlet size</label></div>
-        <label for="sizeGuideToggle" class="guide-btn">VIEW SIZE GUIDE</label>
+        <div class="size-heading"><label>Singlet cut</label>
+<div class="sizes cut-options">
+  <label><input type="radio" name="cut" value="Mens" required><span>MEN'S</span></label>
+  <label><input type="radio" name="cut" value="Womens" required><span>WOMEN'S</span></label>
+</div>
+
+<label>Singlet size</label></div>
+        <button type="button" class="guide-btn" onclick="openSizeGuide()">VIEW SIZE GUIDES</button>
         <div class="sizes sizes-all">
           <label class="size"><input type="radio" name="size" value="XXS" required><span>XXS</span></label>
           <label class="size"><input type="radio" name="size" value="XS"><span>XS</span></label>
@@ -320,19 +274,32 @@ form.addEventListener("submit", async (e) => {
 });
 
 
+
+function openSizeGuide() {
+  const w = window.open("", "MFTCSizeGuide", "width=850,height=650,resizable=yes,scrollbars=yes");
+  if (!w) {
+    alert("Please allow pop-ups for this page to view the size guides.");
+    return;
+  }
+  w.document.open();
+  w.document.write(`<!doctype html>
+<html><head><meta charset="utf-8"><title>MFTC Size Guides</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;padding:24px;background:#f4f4f4;color:#111}
+.wrap{max-width:800px;margin:auto}
+h1{margin:0 0 22px;font-size:28px}
+h2{margin:26px 0 10px;font-size:20px}
+img{display:block;width:100%;height:auto;background:#fff;border-radius:10px}
+.note{font-size:14px;color:#555;margin-top:8px}
+</style></head>
+<body><div class="wrap">
+<h1>MFTC Singlet Size Guides</h1>
+<h2>Men's</h2><img src="sizing.png" alt="Men's singlet size guide">
+<h2>Women's</h2><img src="sizing-womens.png" alt="Women's singlet size guide">
+</div></body></html>`);
+  w.document.close();
+}
+
 </script>
-
-
-<input type="checkbox" id="sizeGuideToggle" class="modal-toggle">
-<div class="modal">
-  <div class="modal-card" role="dialog" aria-labelledby="sizeGuideTitle">
-    <label for="sizeGuideToggle" class="modal-backdrop" aria-label="Close size guide"></label>
-    <div class="modal-content">
-      <label for="sizeGuideToggle" class="modal-close" aria-label="Close size guide">×</label>
-      <h2 id="sizeGuideTitle">Singlet Size Guide</h2>
-      <img src="sizing.png" alt="Singlet sizing chart showing chest and length measurements">
-    </div>
-  </div>
-</div>
 </body>
 </html>

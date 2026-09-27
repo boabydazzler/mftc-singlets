@@ -21,7 +21,7 @@ function doPost(e) {
 
     const data = JSON.parse(e.postData.contents || "{}");
 
-    if (!data.name || !data.size) {
+    if (!data.name || !data.cut || !data.size) {
       throw new Error("Missing required information.");
     }
 
