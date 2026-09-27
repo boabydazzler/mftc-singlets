@@ -156,6 +156,7 @@ input:focus{border-color:var(--bright)}
 }
 .size-heading label{margin:0}
 .guide-btn{
+  display:inline-block;
   margin:8px 0 14px;
   border:1px solid var(--bright);
   background:var(--deep);
@@ -168,51 +169,57 @@ input:focus{border-color:var(--bright)}
   cursor:pointer;
 }
 .guide-btn:hover{background:var(--bright)}
-
+.modal-toggle{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
 .modal{
   display:none;
   position:fixed;
   inset:0;
   z-index:9999;
-  background:rgba(0,0,0,.78);
   align-items:center;
   justify-content:center;
-  padding:24px;
+  padding:20px;
 }
-.modal.open{display:flex}
+.modal-toggle:checked + .modal{display:flex}
 .modal-card{
   position:relative;
-  width:min(820px,92vw);
+  width:min(820px,94vw);
+  z-index:1;
+}
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.80);
+  cursor:pointer;
+}
+.modal-content{
+  position:relative;
+  z-index:2;
   background:#fff;
   color:#000;
   border-radius:16px;
   padding:24px;
   box-shadow:0 24px 80px rgba(0,0,0,.6);
 }
-.modal-card h2{
-  margin:0 45px 16px 0;
-  font-size:24px;
-}
-.modal-card img{
-  display:block;
-  width:100%;
-  height:auto;
-}
+.modal-content h2{margin:0 45px 16px 0;font-size:24px}
+.modal-content img{display:block;width:100%;height:auto}
 .modal-close{
   position:absolute;
-  right:13px;
+  right:14px;
   top:8px;
-  border:0;
-  background:transparent;
   color:#000;
   font-size:34px;
   line-height:1;
   cursor:pointer;
 }
 @media(max-width:650px){
-  .modal{padding:10px}
-  .modal-card{width:98vw;padding:14px}
-  .modal-card h2{font-size:19px;margin-bottom:10px}
+  .modal{padding:8px}
+  .modal-card{width:98vw}
+  .modal-content{padding:12px}
+  .modal-content h2{font-size:18px;margin-bottom:10px}
 }
 @media(max-width:760px){
   .wrap{padding:0}
@@ -242,7 +249,7 @@ input:focus{border-color:var(--bright)}
         <input id="name" name="name" type="text" required autocomplete="name">
 
         <div class="size-heading"><label>Singlet size</label></div>
-        <button type="button" class="guide-btn" id="openGuide">VIEW SIZE GUIDE</button>
+        <label for="sizeGuideToggle" class="guide-btn">VIEW SIZE GUIDE</label>
         <div class="sizes sizes-all">
           <label class="size"><input type="radio" name="size" value="XXS" required><span>XXS</span></label>
           <label class="size"><input type="radio" name="size" value="XS"><span>XS</span></label>
@@ -313,38 +320,19 @@ form.addEventListener("submit", async (e) => {
 });
 
 
-const guideButton = document.getElementById("openGuide");
-const sizeModal = document.getElementById("sizeModal");
-const closeGuideButton = document.getElementById("closeGuide");
-
-guideButton.addEventListener("click", function () {
-  sizeModal.classList.add("open");
-  sizeModal.setAttribute("aria-hidden", "false");
-});
-
-function closeSizeGuide() {
-  sizeModal.classList.remove("open");
-  sizeModal.setAttribute("aria-hidden", "true");
-}
-
-closeGuideButton.addEventListener("click", closeSizeGuide);
-sizeModal.addEventListener("click", function (event) {
-  if (event.target === sizeModal) closeSizeGuide();
-});
-document.addEventListener("keydown", function (event) {
-  if (event.key === "Escape" && sizeModal.classList.contains("open")) closeSizeGuide();
-});
-
 </script>
 
 
-<div class="modal" id="sizeModal" aria-hidden="true">
-  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="sizeGuideTitle">
-    <button type="button" class="modal-close" id="closeGuide" aria-label="Close size guide">×</button>
-    <h2 id="sizeGuideTitle">Singlet Size Guide</h2>
-    <img src="sizing.png" alt="Singlet sizing chart showing chest and length measurements">
+<input type="checkbox" id="sizeGuideToggle" class="modal-toggle">
+<div class="modal">
+  <div class="modal-card" role="dialog" aria-labelledby="sizeGuideTitle">
+    <label for="sizeGuideToggle" class="modal-backdrop" aria-label="Close size guide"></label>
+    <div class="modal-content">
+      <label for="sizeGuideToggle" class="modal-close" aria-label="Close size guide">×</label>
+      <h2 id="sizeGuideTitle">Singlet Size Guide</h2>
+      <img src="sizing.png" alt="Singlet sizing chart showing chest and length measurements">
+    </div>
   </div>
 </div>
-
 </body>
 </html>
