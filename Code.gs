@@ -1,51 +1,40 @@
-/**
- * Mulligans Flat Track Club singlet numbers
- * Collects name and singlet size only.
- */
 const SHEET_NAME = "Singlet Numbers";
 
 function doPost(e) {
-  const lock = LockService.getScriptLock();
-  lock.waitLock(10000);
-
   try {
+    const data = JSON.parse(e.postData.contents || "{}");
+
+    const name = String(data.name || "").trim();
+    const cut = String(data.cut || "").trim();
+    const size = String(data.size || "").trim();
+
+    const allowedCuts = ["Mens", "Womens"];
+    const allowedSizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
+
+    if (!name || !allowedCuts.includes(cut) || !allowedSizes.includes(size)) {
+      return jsonResponse({ok:false, error:"Invalid submission"});
+    }
+
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     let sheet = ss.getSheetByName(SHEET_NAME);
 
     if (!sheet) {
       sheet = ss.insertSheet(SHEET_NAME);
-      sheet.appendRow(["Timestamp", "Name", "Size"]);
-      sheet.getRange(1, 1, 1, 3).setFontWeight("bold");
-      sheet.setFrozenRows(1);
     }
 
-    const data = JSON.parse(e.postData.contents || "{}");
+    // Ensure the four current headers are correct.
+    sheet.getRange(1, 1, 1, 4).setValues([["Timestamp", "Name", "Cut", "Size"]]);
 
-    if (!data.name || !data.cut || !data.size) {
-      throw new Error("Missing required information.");
-    }
-
-    const validSizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
-    if (!validSizes.includes(data.size)) {
-      throw new Error("Invalid size.");
-    }
-
-    sheet.appendRow([
-      new Date(),
-      String(data.name).trim(),
-      data.size
-    ]);
+    sheet.appendRow([new Date(), name, cut, size]);
 
     return jsonResponse({ok:true});
   } catch (err) {
-    return jsonResponse({ok:false, error:String(err.message || err)});
-  } finally {
-    lock.releaseLock();
+    return jsonResponse({ok:false, error:String(err)});
   }
 }
 
 function doGet() {
-  return jsonResponse({ok:true, service:"MFTC Singlet Numbers"});
+  return jsonResponse({ok:true, service:"MFTC singlet form"});
 }
 
 function jsonResponse(obj) {
