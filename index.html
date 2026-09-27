@@ -92,6 +92,7 @@ input[type=text],input[type=email]{
 }
 input:focus{border-color:var(--bright)}
 .sizes{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.sizes-all{grid-template-columns:repeat(4,1fr)}
 .size input{display:none}
 .size span{
   display:block;
@@ -154,52 +155,35 @@ input:focus{border-color:var(--bright)}
   margin-top:17px;
 }
 .size-heading label{margin:0}
-.guide-btn{
+.size-guide{margin:8px 0 14px}
+.size-guide summary{
+  display:inline-block;
   border:1px solid var(--bright);
   background:transparent;
   color:#fff;
   border-radius:9px;
-  padding:8px 10px;
+  padding:9px 12px;
   font-size:11px;
   font-weight:800;
   letter-spacing:.6px;
   cursor:pointer;
+  list-style:none;
 }
-.guide-btn:hover{background:var(--deep)}
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  background:rgba(0,0,0,.82);
-  padding:20px;
-  align-items:center;
-  justify-content:center;
-}
-.modal.open{display:flex}
-.modal-card{
-  position:relative;
-  width:min(960px,100%);
+.size-guide summary::-webkit-details-marker{display:none}
+.size-guide[open] summary{background:var(--deep)}
+.guide-panel{
+  margin-top:12px;
+  padding:12px;
   background:#fff;
-  color:#000;
-  border-radius:18px;
-  padding:28px;
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  border-radius:12px;
+  overflow-x:auto;
 }
-.modal-card h2{margin:0 45px 5px 0}
-.modal-card p{margin:0 45px 20px 0;color:#444}
-.modal-card img{display:block;width:100%;height:auto;border-radius:8px}
-.modal-close{
-  position:absolute;
-  right:16px;
-  top:12px;
-  border:0;
-  background:transparent;
-  color:#000;
-  font-size:34px;
-  cursor:pointer;
+.guide-panel img{
+  display:block;
+  width:100%;
+  min-width:620px;
+  height:auto;
 }
-
 @media(max-width:760px){
   .wrap{padding:0}
   .card{grid-template-columns:1fr;border-radius:0;border:0}
@@ -207,6 +191,7 @@ input:focus{border-color:var(--bright)}
   .product img{max-height:430px}
   .form{padding:30px 22px 40px}
   h1{font-size:30px}
+  .sizes-all{grid-template-columns:repeat(4,1fr)}
 }
 </style>
 </head>
@@ -226,14 +211,21 @@ input:focus{border-color:var(--bright)}
         <label for="name">Your name</label>
         <input id="name" name="name" type="text" required autocomplete="name">
 
-        <label for="email">Email address</label>
-        <input id="email" name="email" type="email" required autocomplete="email">
-
-        <div class="size-heading"><label>Singlet size</label><button type="button" class="guide-btn" id="openGuide">VIEW SIZE GUIDE</button></div>
-        <div class="sizes">
-          <label class="size"><input type="radio" name="size" value="Small" required><span>SMALL</span></label>
-          <label class="size"><input type="radio" name="size" value="Medium"><span>MEDIUM</span></label>
-          <label class="size"><input type="radio" name="size" value="Large"><span>LARGE</span></label>
+        <div class="size-heading"><label>Singlet size</label></div>
+        <details class="size-guide">
+          <summary>VIEW SIZE GUIDE</summary>
+          <div class="guide-panel">
+            <img src="sizing.png" alt="Singlet sizing chart showing chest and length measurements">
+          </div>
+        </details>
+        <div class="sizes sizes-all">
+          <label class="size"><input type="radio" name="size" value="XXS" required><span>XXS</span></label>
+          <label class="size"><input type="radio" name="size" value="XS"><span>XS</span></label>
+          <label class="size"><input type="radio" name="size" value="S"><span>S</span></label>
+          <label class="size"><input type="radio" name="size" value="M"><span>M</span></label>
+          <label class="size"><input type="radio" name="size" value="L"><span>L</span></label>
+          <label class="size"><input type="radio" name="size" value="XL"><span>XL</span></label>
+          <label class="size"><input type="radio" name="size" value="XXL"><span>XXL</span></label>
         </div>
 
         <button class="submit" id="submitBtn" type="submit">COUNT ME IN</button>
@@ -271,7 +263,6 @@ form.addEventListener("submit", async (e) => {
 
   const payload = {
     name: document.getElementById("name").value.trim(),
-    email: document.getElementById("email").value.trim(),
     size: selectedSize()
   };
 
@@ -296,33 +287,7 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-const sizeModal = document.getElementById("sizeModal");
-document.getElementById("openGuide").addEventListener("click", () => {
-  sizeModal.classList.add("open");
-  sizeModal.setAttribute("aria-hidden","false");
-});
-function closeSizeGuide(){
-  sizeModal.classList.remove("open");
-  sizeModal.setAttribute("aria-hidden","true");
-}
-document.getElementById("closeGuide").addEventListener("click", closeSizeGuide);
-sizeModal.addEventListener("click", (e) => {
-  if (e.target === sizeModal) closeSizeGuide();
-});
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeSizeGuide();
-});
-
 </script>
-
-<div class="modal" id="sizeModal" aria-hidden="true">
-  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="sizeGuideTitle">
-    <button type="button" class="modal-close" id="closeGuide" aria-label="Close size guide">×</button>
-    <h2 id="sizeGuideTitle">Singlet Size Guide</h2>
-    <p>Use the supplier measurements below to help choose your size.</p>
-    <img src="sizing.png" alt="Singlet sizing chart showing chest and length measurements">
-  </div>
-</div>
 
 </body>
 </html>
